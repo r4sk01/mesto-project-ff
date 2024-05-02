@@ -25,6 +25,8 @@ const popupNewCardForm = document.forms['new-place'];
 
 // Image Popup
 const popupImage = document.querySelector('.popup_type_image');
+const popupImageFull = popupImage.querySelector('.popup__image');
+const popupImageCaption = popupImage.querySelector('.popup__caption');
 
 // List of All Popups
 const popupList = document.querySelectorAll('.popup');
@@ -35,7 +37,7 @@ const popupList = document.querySelectorAll('.popup');
 initialCards.forEach((element) => {
     const name = element.name;
     const link = element.link;
-    const card = createCard(deleteCard, likeCard, name, link);
+    const card = createCard(deleteCard, likeCard, handlerOpenFullImage, name, link);
     cardContainer.append(card);
 });
 
@@ -88,7 +90,15 @@ function handlerNewCardSubmit(evt) {
     evt.preventDefault();
     const name = popupNewCardName.value;
     const link = popupNewCardUrl.value;
-    cardContainer.prepend(createCard(deleteCard, likeCard, name, link));
+    cardContainer.prepend(createCard(deleteCard, likeCard, handlerOpenFullImage, name, link));
     popupNewCardForm.reset();
     closeModal(popupNewCard);
+}
+
+// @todo: Handler to Open an Image on Click
+function handlerOpenFullImage(link, name) {
+    popupImageFull.src = link;
+    popupImageFull.alt = name;
+    popupImageCaption.textContent = name;
+    openModal(popupImage);
 }
