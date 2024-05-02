@@ -16,10 +16,12 @@ const profileEditBtn = document.querySelector('.profile__edit-button');
 const popupEdit = document.querySelector('.popup_type_edit');
 const popupEditName = popupEdit.querySelector('.popup__input_type_name');
 const popupEditDescription = document.querySelector('.popup__input_type_description');
-const popupEditForm = document.forms['edit-profile'];
 
 // New Card Popup
 const popupNewCard = document.querySelector('.popup_type_new-card');
+const popupNewCardName = document.querySelector('input[name="place-name"]');
+const popupNewCardUrl = document.querySelector('input[name="link"]');
+const popupNewCardForm = document.forms['new-place'];
 
 // Image Popup
 const popupImage = document.querySelector('.popup_type_image');
@@ -44,9 +46,6 @@ profileEditBtn.addEventListener('click', () => {
     handlerOpenModalPopupEditWithInput(popupEdit);
 });
 
-// @todo: Edit Popup Form Submit
-popupEdit.addEventListener('submit', handlerEditProfileFormSubmit);
-
 // @todo: Open Popup when + is clicked
 profileAddBtn.addEventListener('click', () => {
     openModal(popupNewCard);
@@ -59,8 +58,15 @@ popupList.forEach((item) => {
     });
 });
 
+// 3.0 Submits
 
-// 3.0 Handlers
+// @todo: Edit Popup Form Submit
+popupEdit.addEventListener('submit', handlerEditProfileFormSubmit);
+
+// @todo: New Card Popup: Add Submit
+popupNewCard.addEventListener('submit', handlerNewCardSubmit);
+
+// 4.0 Handlers
 
 // @todo: Handler to Open Modal popupEdit
 const handlerOpenModalPopupEditWithInput = (popupEdit) => {
@@ -75,4 +81,14 @@ function handlerEditProfileFormSubmit(evt) {
     profileTitle.textContent = popupEditName.value;
     profileDescription.textContent = popupEditDescription.value;
     closeModal(popupEdit);
+}
+
+// @todo: Handler to Add New Card Via Form Submit
+function handlerNewCardSubmit(evt) {
+    evt.preventDefault();
+    const name = popupNewCardName.value;
+    const link = popupNewCardUrl.value;
+    cardContainer.prepend(createCard(deleteCard, name, link));
+    popupNewCardForm.reset();
+    closeModal(popupNewCard);
 }
