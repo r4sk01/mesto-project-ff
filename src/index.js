@@ -1,6 +1,6 @@
 import './styles/index.css';
 import {initialCards} from "./scripts/cards";
-import {createCard, deleteCard} from "./scripts/card";
+import {createCard, deleteCard, likeCard} from "./scripts/card";
 import {closeModal, openModal} from "./scripts/modal";
 
 const cardContainer = document.querySelector('.places__list');
@@ -35,7 +35,7 @@ const popupList = document.querySelectorAll('.popup');
 initialCards.forEach((element) => {
     const name = element.name;
     const link = element.link;
-    const card = createCard(deleteCard, name, link);
+    const card = createCard(deleteCard, likeCard, name, link);
     cardContainer.append(card);
 });
 
@@ -88,7 +88,7 @@ function handlerNewCardSubmit(evt) {
     evt.preventDefault();
     const name = popupNewCardName.value;
     const link = popupNewCardUrl.value;
-    cardContainer.prepend(createCard(deleteCard, name, link));
+    cardContainer.prepend(createCard(deleteCard, likeCard, name, link));
     popupNewCardForm.reset();
     closeModal(popupNewCard);
 }

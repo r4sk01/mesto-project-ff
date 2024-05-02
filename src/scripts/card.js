@@ -2,8 +2,10 @@
 const cardTemplate = document.querySelector('#card-template').content;
 
 // @todo: Create Card
-export const createCard = function (deleteCard, ...data) {
+export const createCard = function (deleteCard, likeCard, ...data) {
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
+    const cardLikeBtn = cardElement.querySelector('.card__like-button');
+    const cardRemoveBtn = cardElement.querySelector('.card__delete-button')
 
     // Get Card Attributes from Spread
     const [name, link] = data;
@@ -16,10 +18,14 @@ export const createCard = function (deleteCard, ...data) {
     cardElementImage.src = link;
     cardElementImage.alt = `Картинка отображающая ${name}`;
 
-    // Event Listener for Delete Button
-    cardElement.querySelector('.card__delete-button').addEventListener('click', (evt)=>{
+    // Event Listener for Delete Button, Like Button
+    cardRemoveBtn.addEventListener('click', (evt)=>{
         deleteCard(evt.target.closest('.places__item'));
     });
+
+    cardLikeBtn.addEventListener('click', (evt)=>{
+        likeCard(cardLikeBtn);
+    })
 
     return cardElement;
 };
@@ -27,4 +33,9 @@ export const createCard = function (deleteCard, ...data) {
 // @todo: Delete Card
 export const deleteCard = function (element){
     element.remove();
+};
+
+// @todo: Like Card
+export const likeCard = function (element){
+    element.classList.toggle('card__like-button_is-active');
 };
