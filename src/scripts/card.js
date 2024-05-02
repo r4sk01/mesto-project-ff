@@ -1,11 +1,10 @@
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
 
-// @todo: DOM узлы
-const cardContainer = document.querySelector('.places__list');
+// const cardContainer = document.querySelector('.places__list');
 
 // @todo: Функция создания карточки
-const createCard = function (deleteCard, ...data) {
+export const createCard = function (deleteCard, ...data) {
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
 
     // Get Card Attributes from Spread
@@ -28,14 +27,13 @@ const createCard = function (deleteCard, ...data) {
 };
 
 // @todo: Функция удаления карточки
-const deleteCard = function (element){
+export const deleteCard = function (element){
     element.remove();
 };
 
-// @todo: Вывести карточки на страницу
-initialCards.forEach((element) => {
-    const name = element.name;
-    const link = element.link;
-    const card = createCard(deleteCard, name, link);
-    cardContainer.append(card);
-});
+// initialCards.forEach((element) => {
+//     const name = element.name;
+//     const link = element.link;
+//     const card = createCard(deleteCard, name, link);
+//     cardContainer.append(card);
+// });
