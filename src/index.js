@@ -1,104 +1,192 @@
-import './styles/index.css';
-import {initialCards} from "./scripts/cards";
-import {createCard, deleteCard, likeCard} from "./scripts/card";
-import {closeModal, openModal} from "./scripts/modal";
+import "./styles/index.css";
+import {createCard, handleDeleteCard, handleClickLike } from "./scripts/card.js";
+import {openModal, closeModal } from "./scripts/modal.js";
+import {enableValidation, resetValidation } from "./scripts/validation.js";
+import {getUser, getInitCards, updateAvatar, editProfile, postNewCard} from "./scripts/api.js";
 
-const cardContainer = document.querySelector('.places__list');
+const cardsContainer = document.querySelector(".places__list"); // список карточек
 
-const profileTitle = document.querySelector('.profile__title');
-const profileDescription = document.querySelector('.profile__description');
-
-// Buttons to open Popups
-const profileAddBtn = document.querySelector('.profile__add-button');
-const profileEditBtn = document.querySelector('.profile__edit-button');
-
-// Edit Profile Popup
-const popupEdit = document.querySelector('.popup_type_edit');
-const popupEditName = popupEdit.querySelector('.popup__input_type_name');
-const popupEditDescription = document.querySelector('.popup__input_type_description');
-
-// New Card Popup
-const popupNewCard = document.querySelector('.popup_type_new-card');
-const popupNewCardName = document.querySelector('input[name="place-name"]');
-const popupNewCardUrl = document.querySelector('input[name="link"]');
-const popupNewCardForm = document.forms['new-place'];
-
-// Image Popup
-const popupImage = document.querySelector('.popup_type_image');
-const popupImageFull = popupImage.querySelector('.popup__image');
-const popupImageCaption = popupImage.querySelector('.popup__caption');
-
-// List of All Popups
 const popupList = document.querySelectorAll('.popup');
+const popupProfile = document.querySelector(".popup_type_edit"); // попап редактирования профиля
+const profileEditBtn = document.querySelector(".profile__edit-button"); // кнопка открытия попапа профиля
 
-// 1.0 Display Initial Cards
+const popupCard = document.querySelector(".popup_type_new-card"); // попап добавления новой карточки
+const profileAddBtn = document.querySelector(".profile__add-button"); // кнопка открытия попапа карточек
 
-// @todo: Display Initial Cards
-initialCards.forEach((element) => {
-    const name = element.name;
-    const link = element.link;
-    const card = createCard(deleteCard, likeCard, handlerOpenFullImage, name, link);
-    cardContainer.append(card);
-});
+const formEditProfile = document.forms["edit-profile"];
+const formCreateCard = document.forms["new-place"];
+const formChangeAvatar = document.forms["new-avatar"];
 
-// 2.0 Open & Close Modals
+const popupImage = document.querySelector(".popup_type_image"); // попап полнораземного изображения
+const popupFullImage = popupImage.querySelector(".popup__image"); // изображение в полном размере
+const popupCaption = popupImage.querySelector(".popup__caption"); // подпись под изображением
 
-// @todo: Open Popup when edit is clicked
-profileEditBtn.addEventListener('click', () => {
-    handlerOpenModalPopupEditWithInput(popupEdit);
-});
+const avatarBtn = document.querySelector(".profile__image");
+const popupAvatar = document.querySelector(".popup_type_avatar");
 
-// @todo: Open Popup when + is clicked
-profileAddBtn.addEventListener('click', () => {
-    openModal(popupNewCard);
-});
+const cardNameInput = popupCard.querySelector(".popup__input_type_card-name"); // название добавляемой карточки
+const cardUrlInput = popupCard.querySelector(".popup__input_type_url"); // ссылка на добавляемую карточку
 
-// @todo: Close Popup By Click Cross
-popupList.forEach((item) => {
-    item.querySelector('.popup__close').addEventListener('click', () => {
-        closeModal(item);
-    });
-});
+const nameInput = document.querySelector(".popup__input_type_name"); // вводимое имя в профиле
+const descriptionInput = document.querySelector(".popup__input_type_description"); // вводимая работа в профиле
 
-// 3.0 Submits
+const profileTitle = document.querySelector(".profile__title"); // профиль - имя
+const profileDescription = document.querySelector(".profile__description"); // профиль - работа
 
-// @todo: Edit Popup Form Submit
-popupEdit.addEventListener('submit', handlerEditProfileFormSubmit);
+const avatarInput = document.querySelector(".popup__input_type_avatar");
+const profileImage = document.querySelector(".profile__image-avatar");
 
-// @todo: New Card Popup: Add Submit
-popupNewCard.addEventListener('submit', handlerNewCardSubmit);
-
-// 4.0 Handlers
-
-// @todo: Handler to Open Modal popupEdit
-const handlerOpenModalPopupEditWithInput = (popupEdit) => {
-    popupEditName.value = profileTitle.textContent;
-    popupEditDescription.value = profileDescription.textContent;
-    openModal(popupEdit);
+const validationConfig = {
+    formSelector: ".popup__form",
+    inputSelector: ".popup__input",
+    submitButtonSelector: ".popup__button",
+    inactiveButtonClass: "popup__button_disabled",
+    inputErrorClass: "popup__input_type_error",
+    errorClass: "popup__error_visible",
 };
 
-// @todo: Handler to Submit Edit Popup Form
-function handlerEditProfileFormSubmit(evt) {
+// @todo: Avatar Change handler
+const handleAvatarUpdate = (evt) => {
     evt.preventDefault();
-    profileTitle.textContent = popupEditName.value;
-    profileDescription.textContent = popupEditDescription.value;
-    closeModal(popupEdit);
-}
+    const avatarLink = avatarInput.value;
+    evt.submitter.textContent = 'Сохранение...';
+    updateAvatar(avatarLink)
+        .then((avatar) => {
+            profileImage.src = avatar.avatar;
+            //closeModal(avatarInput);
+            closeModal(popupAvatar);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            evt.submitter.textContent = 'Сохранить';
+        })
+};
 
-// @todo: Handler to Add New Card Via Form Submit
-function handlerNewCardSubmit(evt) {
-    evt.preventDefault();
-    const name = popupNewCardName.value;
-    const link = popupNewCardUrl.value;
-    cardContainer.prepend(createCard(deleteCard, likeCard, handlerOpenFullImage, name, link));
-    popupNewCardForm.reset();
-    closeModal(popupNewCard);
-}
-
-// @todo: Handler to Open an Image on Click
-function handlerOpenFullImage(link, name) {
-    popupImageFull.src = link;
-    popupImageFull.alt = name;
-    popupImageCaption.textContent = name;
+// @todo: Open Popup With Full Image
+const openImagePopup = (cardData) => {
+    popupFullImage.src = cardData.link;
+    popupFullImage.alt = cardData.name;
+    popupCaption.textContent = cardData.name;
     openModal(popupImage);
-}
+};
+
+// @todo: Add New Card Handler
+const handleAddCardFormSubmit = (evt) => {
+    evt.preventDefault();
+
+    const name = cardNameInput.value;
+    const link = cardUrlInput.value;
+
+    evt.submitter.textContent = 'Сохранение...';
+
+    postNewCard(name, link)
+        .then((cardData) => {
+            cardsContainer.prepend(
+                createCard(
+                    cardData,
+                    cardData.owner._id,
+                    handleDeleteCard,
+                    handleClickLike,
+                    openImagePopup
+                )
+            );
+            closeModal(popupCard);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            evt.submitter.textContent = 'Сохранить';
+        })
+};
+
+// @todo: Edit Self Information
+const handleEditProfileFormSubmit = (evt) => {
+    evt.preventDefault();
+
+    const name = nameInput.value;
+    const job = descriptionInput.value;
+
+    evt.submitter.textContent = 'Сохранение...';
+
+    editProfile(name, job)
+        .then(() => {
+            profileTitle.textContent = nameInput.value;
+            profileDescription.textContent = descriptionInput.value;
+            closeModal(popupProfile);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            evt.submitter.textContent = 'Сохранить';
+        })
+};
+
+avatarBtn.addEventListener("click", () => {
+    resetValidation(formChangeAvatar, validationConfig);
+        openModal(popupAvatar);
+});
+
+// @todo: Fill Profile Input
+const fillProfileInput = (popupProfile) => {
+    nameInput.value = profileTitle.textContent;
+    descriptionInput.value = profileDescription.textContent;
+    openModal(popupProfile);
+};
+
+// @todo: Listen to Open Profile Popup
+profileEditBtn.addEventListener("click", () => {
+    resetValidation(formEditProfile, validationConfig);
+    fillProfileInput(popupProfile);
+});
+
+// @todo: Listen to Open Add Card Btn
+profileAddBtn.addEventListener("click", () => {
+    formCreateCard.reset();
+    resetValidation(formCreateCard, validationConfig);
+    openModal(popupCard);
+});
+
+// @todo: Turn On Validation
+enableValidation(validationConfig);
+
+// @todo: Display Cards
+Promise.all([getUser(), getInitCards()])
+    .then(([user, cards]) => {
+        const userId = user._id;
+
+        cards.forEach((cardData) => {
+            const cards = createCard(
+                cardData,
+                userId,
+                handleDeleteCard,
+                handleClickLike,
+                openImagePopup
+            );
+            cardsContainer.append(cards);
+        });
+
+        profileTitle.textContent = user.name;
+        profileDescription.textContent = user.about;
+
+        profileImage.src = user.avatar;
+        profileImage.alt = user.name;
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
+// @todo: Listeners for Modal Windows
+formEditProfile.addEventListener("submit", handleEditProfileFormSubmit);
+formCreateCard.addEventListener("submit", handleAddCardFormSubmit);
+formChangeAvatar.addEventListener("submit", handleAvatarUpdate);
+
+popupList.forEach(function (popupItem) {
+    const popupCloseButton = popupItem.querySelector(".popup__close");
+    popupCloseButton.addEventListener("click", () => {
+        closeModal(popupItem);
+    });
+});
