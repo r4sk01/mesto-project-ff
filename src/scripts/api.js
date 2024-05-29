@@ -15,12 +15,17 @@ const handleResponse = (res) => {
     return Promise.reject(`Ошибка: ${res.status}`);
 };
 
+// @todo: Universal Request Function
+const request = (endpoint, options) => {
+    const url = `${config.baseUrl}${endpoint}`;
+    return fetch(url, options).then(handleResponse);
+};
+
 // @todo: Get User Info
 export const getUser = () => {
-    return fetch(`${config.baseUrl}/users/me`, {
+    return request('/users/me', {
         headers: config.headers
-    })
-        .then(handleResponse);
+    });
 };
 
 // @todo: Get Init Cards From Server
@@ -28,7 +33,7 @@ export const getInitCards = () => {
     return fetch(`${config.baseUrl}/cards`, {
         headers: config.headers
     })
-        .then(handleResponse);
+    .then(handleResponse);
 };
 
 // @todo: Edit Profile
@@ -41,7 +46,7 @@ export const editProfile = (name, about) => {
             about
         })
     })
-        .then(handleResponse);
+    .then(handleResponse);
 };
 
 // @todo: Post New Card
@@ -54,7 +59,7 @@ export const postNewCard = (name, link) => {
             link
         })
     })
-        .then(handleResponse);
+    .then(handleResponse);
 };
 
 // @todo: Remove Card
@@ -63,7 +68,7 @@ export const deleteCard = (id) => {
         method: 'DELETE',
         headers: config.headers,
     })
-        .then(handleResponse);
+    .then(handleResponse);
 };
 
 // @todo: Enable Card Like
@@ -72,7 +77,7 @@ export const clickCardLike = (id) => {
         method: 'PUT',
         headers: config.headers,
     })
-        .then(handleResponse);
+    .then(handleResponse);
 };
 
 // @todo: Remove Card Like
@@ -81,7 +86,7 @@ export const deleteCardLike = (id) => {
         method: 'DELETE',
         headers: config.headers,
     })
-        .then(handleResponse);
+    .then(handleResponse);
 };
 
 // @todo: Update Avatar
@@ -93,5 +98,5 @@ export const updateAvatar = (avatar) => {
             avatar: `${avatar}`
         })
     })
-        .then(handleResponse);
+    .then(handleResponse);
 };

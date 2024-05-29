@@ -3,6 +3,7 @@ import {createCard, handleDeleteCard, handleClickLike } from "./scripts/card.js"
 import {openModal, closeModal } from "./scripts/modal.js";
 import {enableValidation, resetValidation } from "./scripts/validation.js";
 import {getUser, getInitCards, updateAvatar, editProfile, postNewCard} from "./scripts/api.js";
+import {validationConfig} from "./utils/constants";
 
 const cardsContainer = document.querySelector(".places__list"); // список карточек
 
@@ -35,15 +36,6 @@ const profileDescription = document.querySelector(".profile__description"); // �
 
 const avatarInput = document.querySelector(".popup__input_type_avatar");
 const profileImage = document.querySelector(".profile__image-avatar");
-
-const validationConfig = {
-    formSelector: ".popup__form",
-    inputSelector: ".popup__input",
-    submitButtonSelector: ".popup__button",
-    inactiveButtonClass: "popup__button_disabled",
-    inputErrorClass: "popup__input_type_error",
-    errorClass: "popup__error_visible",
-};
 
 // @todo: Avatar Change handler
 const handleAvatarUpdate = (evt) => {
@@ -127,7 +119,7 @@ const handleEditProfileFormSubmit = (evt) => {
 
 avatarBtn.addEventListener("click", () => {
     resetValidation(formChangeAvatar, validationConfig);
-        openModal(popupAvatar);
+    openModal(popupAvatar);
 });
 
 // @todo: Fill Profile Input

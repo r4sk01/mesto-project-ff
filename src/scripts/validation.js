@@ -40,11 +40,15 @@ const hasInvalidInput = (inputList) => {
     });
 };
 
+const disableBtn = (btn, validationConfig) => {
+    btn.disabled = true;
+    btn.classList.add(validationConfig.inactiveButtonClass);
+};
+
 // @todo: Toggle Btn State (block/unblock button)
 const toggleBtnState = (inputList, btn, validationConfig) => {
     if (hasInvalidInput(inputList)) {
-        btn.disabled = true;
-        btn.classList.add(validationConfig.inactiveButtonClass);
+        disableBtn(btn, validationConfig);
     } else {
         btn.disabled = false;
         btn.classList.remove(validationConfig.inactiveButtonClass);
@@ -85,10 +89,8 @@ export const resetValidation = (form, validationConfig) => {
     const btn = form.querySelector(validationConfig.submitButtonSelector);
 
     if (btn) {
-        btn.disabled = true;
-        btn.classList.add(validationConfig.inactiveButtonClass);
+        disableBtn(btn, validationConfig);
     }
-    btn.textContent = "Сохранить";
 
     inputList.forEach((input) => {
         hideInputError(form, input, validationConfig);

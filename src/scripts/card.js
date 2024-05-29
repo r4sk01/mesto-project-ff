@@ -16,12 +16,7 @@ export const handleDeleteCard = (cardId, cardElement) => {
 };
 
 // @todo: Like Click Handler
-export const handleClickLike = (
-    like,
-    cardData,
-    buttonIsActive,
-    likeCounter
-) => {
+export const handleClickLike = (like, cardData, buttonIsActive, likeCounter) => {
     const likeMethod = like.classList.contains(buttonIsActive)
         ? deleteCardLike
         : clickCardLike;
