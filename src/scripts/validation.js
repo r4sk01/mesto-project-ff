@@ -60,9 +60,7 @@ const setEventListeners = (form, validationConfig) => {
     const inputList = Array.from(
         form.querySelectorAll(validationConfig.inputSelector)
     );
-    const btn = form.querySelector(
-        validationConfig.submitButtonSelector
-    );
+    const btn = form.querySelector(validationConfig.submitButtonSelector);
     toggleBtnState(inputList, btn, validationConfig);
     inputList.forEach((input) => {
         input.addEventListener("input", () => {
@@ -74,7 +72,9 @@ const setEventListeners = (form, validationConfig) => {
 
 // @todo: Add Listeners to All Forms
 export const enableValidation = (validationConfig) => {
-    const formList = Array.from(document.querySelectorAll(validationConfig.formSelector));
+    const formList = Array.from(
+        document.querySelectorAll(validationConfig.formSelector)
+    );
     formList.forEach((form) => {
         form.addEventListener("submit", (evt) => {
             evt.preventDefault();
@@ -85,7 +85,9 @@ export const enableValidation = (validationConfig) => {
 
 // @todo: Reset Validation, Make Btn Inactive
 export const resetValidation = (form, validationConfig) => {
-    const inputList = Array.from(form.querySelectorAll(validationConfig.inputSelector));
+    const inputList = Array.from(
+        form.querySelectorAll(validationConfig.inputSelector)
+    );
     const btn = form.querySelector(validationConfig.submitButtonSelector);
 
     if (btn) {
@@ -96,5 +98,3 @@ export const resetValidation = (form, validationConfig) => {
         hideInputError(form, input, validationConfig);
     });
 };
-
-

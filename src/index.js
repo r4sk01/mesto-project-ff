@@ -1,13 +1,23 @@
 import "./styles/index.css";
-import {createCard, handleDeleteCard, handleClickLike } from "./scripts/card.js";
-import {openModal, closeModal } from "./scripts/modal.js";
-import {enableValidation, resetValidation } from "./scripts/validation.js";
-import {getUser, getInitCards, updateAvatar, editProfile, postNewCard} from "./scripts/api.js";
-import {validationConfig} from "./utils/constants";
+import {
+    createCard,
+    handleDeleteCard,
+    handleClickLike,
+} from "./scripts/card.js";
+import { openModal, closeModal } from "./scripts/modal.js";
+import { enableValidation, resetValidation } from "./scripts/validation.js";
+import {
+    getUser,
+    getInitCards,
+    updateAvatar,
+    editProfile,
+    postNewCard,
+} from "./scripts/api.js";
+import { validationConfig } from "./utils/constants";
 
 const cardsContainer = document.querySelector(".places__list"); // список карточек
 
-const popupList = document.querySelectorAll('.popup');
+const popupList = document.querySelectorAll(".popup");
 const popupProfile = document.querySelector(".popup_type_edit"); // попап редактирования профиля
 const profileEditBtn = document.querySelector(".profile__edit-button"); // кнопка открытия попапа профиля
 
@@ -29,7 +39,9 @@ const cardNameInput = popupCard.querySelector(".popup__input_type_card-name"); /
 const cardUrlInput = popupCard.querySelector(".popup__input_type_url"); // ссылка на добавляемую карточку
 
 const nameInput = document.querySelector(".popup__input_type_name"); // вводимое имя в профиле
-const descriptionInput = document.querySelector(".popup__input_type_description"); // вводимая работа в профиле
+const descriptionInput = document.querySelector(
+    ".popup__input_type_description"
+); // вводимая работа в профиле
 
 const profileTitle = document.querySelector(".profile__title"); // профиль - имя
 const profileDescription = document.querySelector(".profile__description"); // профиль - работа
@@ -41,7 +53,7 @@ const profileImage = document.querySelector(".profile__image-avatar");
 const handleAvatarUpdate = (evt) => {
     evt.preventDefault();
     const avatarLink = avatarInput.value;
-    evt.submitter.textContent = 'Сохранение...';
+    evt.submitter.textContent = "Сохранение...";
     updateAvatar(avatarLink)
         .then((avatar) => {
             profileImage.src = avatar.avatar;
@@ -52,8 +64,8 @@ const handleAvatarUpdate = (evt) => {
             console.log(err);
         })
         .finally(() => {
-            evt.submitter.textContent = 'Сохранить';
-        })
+            evt.submitter.textContent = "Сохранить";
+        });
 };
 
 // @todo: Open Popup With Full Image
@@ -71,7 +83,7 @@ const handleAddCardFormSubmit = (evt) => {
     const name = cardNameInput.value;
     const link = cardUrlInput.value;
 
-    evt.submitter.textContent = 'Сохранение...';
+    evt.submitter.textContent = "Сохранение...";
 
     postNewCard(name, link)
         .then((cardData) => {
@@ -90,8 +102,8 @@ const handleAddCardFormSubmit = (evt) => {
             console.log(err);
         })
         .finally(() => {
-            evt.submitter.textContent = 'Сохранить';
-        })
+            evt.submitter.textContent = "Сохранить";
+        });
 };
 
 // @todo: Edit Self Information
@@ -101,7 +113,7 @@ const handleEditProfileFormSubmit = (evt) => {
     const name = nameInput.value;
     const job = descriptionInput.value;
 
-    evt.submitter.textContent = 'Сохранение...';
+    evt.submitter.textContent = "Сохранение...";
 
     editProfile(name, job)
         .then(() => {
@@ -113,8 +125,8 @@ const handleEditProfileFormSubmit = (evt) => {
             console.log(err);
         })
         .finally(() => {
-            evt.submitter.textContent = 'Сохранить';
-        })
+            evt.submitter.textContent = "Сохранить";
+        });
 };
 
 avatarBtn.addEventListener("click", () => {

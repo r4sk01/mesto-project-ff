@@ -1,5 +1,5 @@
 // @todo: APIs Import
-import {deleteCard, clickCardLike, deleteCardLike} from "./api.js";
+import { deleteCard, clickCardLike, deleteCardLike } from "./api.js";
 
 // @todo: Card Template
 const cardTemplate = document.querySelector("#card-template").content;
@@ -16,7 +16,12 @@ export const handleDeleteCard = (cardId, cardElement) => {
 };
 
 // @todo: Like Click Handler
-export const handleClickLike = (like, cardData, buttonIsActive, likeCounter) => {
+export const handleClickLike = (
+    like,
+    cardData,
+    buttonIsActive,
+    likeCounter
+) => {
     const likeMethod = like.classList.contains(buttonIsActive)
         ? deleteCardLike
         : clickCardLike;
@@ -41,7 +46,13 @@ const countLike = (counter, cardData) => {
 };
 
 // @todo: Create Card
-export function createCard(cardData, userId, handleDeleteCard, handleClickLike, handleClickCard) {
+export function createCard(
+    cardData,
+    userId,
+    handleDeleteCard,
+    handleClickLike,
+    handleClickCard
+) {
     const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
     const cardImage = cardElement.querySelector(".card__image");
     const cardTitle = cardElement.querySelector(".card__title");
